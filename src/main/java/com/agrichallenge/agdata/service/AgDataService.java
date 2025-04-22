@@ -31,21 +31,29 @@ public class AgDataService {
     }
 
     public Long getCropCount(String cropName) {
-        // TODO: Implement this method to Count how many times a specific crop appears in the dataset
-
-        return 0L;
+        return agDataList.stream()
+                .filter(agData -> agData.getCrop().equalsIgnoreCase(cropName))
+                .count();
     }
 
     public double getAverageYield(String cropName) {
-        // TODO: Implement this method to Calculate the average yield for a specific crop if it exists, else return 0.0
+        List<Integer> yields = agDataList.stream()
+                .filter(agData -> agData.getCrop().equalsIgnoreCase(cropName))
+                .map(AgData::getYield)
+                .collect(Collectors.toList());
 
-        return 0.0;
+        if (yields.isEmpty()) {
+            return 0.0;
+        }
+
+        double totalYield = yields.stream().mapToInt(Integer::intValue).sum();
+        return totalYield / yields.size();
     }
 
     public List<AgData> getRecordsByRegion(String region) {
-        // TODO: Implement this method to Get all records from a specific region
-
-        return null;
+        return agDataList.stream()
+                .filter(agData -> agData.getRegion().equalsIgnoreCase(region))
+                .collect(Collectors.toList());
     }
 
 }
